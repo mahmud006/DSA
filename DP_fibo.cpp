@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
-// vector<int> cache(1000, -1);
 vector<int> cache(1000, 0);
+// vector<int> cache(1000, -1);
 int fib(int n)
 {
     if (n <= 1)

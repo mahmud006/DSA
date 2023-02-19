@@ -1,89 +1,186 @@
+// #include <bits/stdc++.h>
+// using namespace std;
+// #define DUMMYVALUE INT_MIN
+// int len = 0;
+// class LinkedListNode
+// {
+// public:
+//     int value;
+//     LinkedListNode *next;
+//     LinkedListNode(int val, LinkedListNode *nxt)
+//     {
+//         value = val;
+//         next = nxt;
+//     }
+// };
+
+// LinkedListNode *insertAtHead(LinkedListNode *head, int val)
+// {
+//     LinkedListNode *newNode = new LinkedListNode(val, NULL);
+//     LinkedListNode *prevHeadNext = head->next;
+//     head->next = newNode;
+//     newNode->next = prevHeadNext;
+//     len++;
+//     return head;
+// }
+// LinkedListNode *insertAtTail(LinkedListNode *head, int val)
+// {
+//     LinkedListNode *curr = head;
+//     while (curr->next)
+//     {
+//         curr = curr->next;
+//     }
+//     curr->next = new LinkedListNode(val, NULL);
+//     len++;
+//     return head;
+// }
+// void insertAtIndex(LinkedListNode *head, int index, int val)
+// {
+//     if (index < 0 || index > len)
+//         return;
+//     auto curr = head;
+//     while (index--)
+//     {
+//         curr = curr->next;
+//     }
+//     auto jointNode = curr->next;
+//     curr->next = new LinkedListNode(val, NULL);
+//     curr->next->next = jointNode;
+//     len++;
+// }
+// void deleteAtIndex(LinkedListNode *head, int index)
+// {
+//     if (index < 0 || index >= len)
+//         return;
+//     auto curr = head;
+//     while (index--)
+//     {
+//         curr = curr->next;
+//     }
+//     auto dumpNode = curr->next;
+//     curr->next = curr->next->next;
+//     delete (dumpNode);
+//     len--;
+// }
+// void printList(LinkedListNode *head)
+// {
+//     LinkedListNode *curr = head->next;
+//     while (curr)
+//     {
+//         cout << curr->value << " ";
+//         curr = curr->next;
+//     }
+// }
+// int main()
+// {
+//     LinkedListNode *head = new LinkedListNode(DUMMYVALUE, NULL);
+
+//     for (int i = 0; i < 5; i++)
+//     {
+//         head = insertAtHead(head, i);
+//     }
+//     for (int i = 5; i < 10; i++)
+//     {
+//         head = insertAtTail(head, i);
+//     }
+//     insertAtIndex(head, 6, 16);
+//     deleteAtIndex(head, 5);
+//     printList(head);
+// }
+
+// linked list insertion
 #include <bits/stdc++.h>
 using namespace std;
-#define DUMMYVALUE INT_MIN
-int len = 0;
-class LinkedListNode
+
+class Node
 {
 public:
-    int value;
-    LinkedListNode *next;
-    LinkedListNode(int val, LinkedListNode *nxt)
+    int data;
+    Node *next;
+    Node(int data)
     {
-        value = val;
-        next = nxt;
+        this->data = data;
+        next = NULL;
     }
 };
 
-LinkedListNode *insertAtHead(LinkedListNode *head, int val)
+void insertAtHead(Node *&head, int data)
 {
-    LinkedListNode *newNode = new LinkedListNode(val, NULL);
-    LinkedListNode *prevHeadNext = head->next;
-    head->next = newNode;
-    newNode->next = prevHeadNext;
-    len++;
-    return head;
-}
-LinkedListNode *insertAtTail(LinkedListNode *head, int val)
-{
-    LinkedListNode *curr = head;
-    while (curr->next)
+    if (head == NULL)
     {
-        curr = curr->next;
-    }
-    curr->next = new LinkedListNode(val, NULL);
-    len++;
-    return head;
-}
-void insertAtIndex(LinkedListNode *head, int index, int val)
-{
-    if (index < 0 || index > len)
+        head = new Node(data);
         return;
-    auto curr = head;
-    while (index--)
-    {
-        curr = curr->next;
     }
-    auto jointNode = curr->next;
-    curr->next = new LinkedListNode(val, NULL);
-    curr->next->next = jointNode;
-    len++;
+    Node *newNode = new Node(data);
+    newNode->next = head;
+    head = newNode;
 }
-void deleteAtIndex(LinkedListNode *head, int index)
+void insertAtIndex(Node *&head, int data, int idx)
 {
-    if (index < 0 || index >= len)
-        return;
-    auto curr = head;
-    while (index--)
+    if (idx == 0)
+        insertAtHead(head, data);
+    else
     {
-        curr = curr->next;
+        Node *temp = head;
+        for (int i = 0; i < idx - 1; i++)
+        {
+            temp = temp->next;
+        }
+        Node *newNode = new Node(data);
+        newNode->next = temp->next;
+        temp->next = newNode;
     }
-    auto dumpNode = curr->next;
-    curr->next = curr->next->next;
-    delete (dumpNode);
-    len--;
 }
-void printList(LinkedListNode *head)
+Node *recReverseLL(Node *&head)
 {
-    LinkedListNode *curr = head->next;
-    while (curr)
+    // base case
+    if (head == NULL || head->next == NULL)
     {
-        cout << curr->value << " ";
-        curr = curr->next;
+        return head;
+    }
+    Node *smallHead = recReverseLL(head->next);
+    head->next->next = head;
+    head->next = NULL;
+    return smallHead;
+}
+void iterativeReverseLL(Node *&head)
+{
+    Node *prev = NULL;
+    Node *current = head;
+    Node *temp;
+
+    while (current != NULL)
+    {
+        temp = current->next;
+        current->next = prev;
+
+        prev = current;
+        current = temp;
+    }
+    head = prev;
+    return;
+}
+void print(Node *head)
+{
+    while (head != NULL)
+    {
+        cout << head->data << "->";
+        head = head->next;
     }
 }
 int main()
 {
-    LinkedListNode *head = new LinkedListNode(DUMMYVALUE, NULL);
+    Node *head = NULL;
+    insertAtHead(head, 1);
+    insertAtHead(head, 12);
+    insertAtHead(head, 23);
+    insertAtHead(head, 2);
+    insertAtHead(head, 22);
+    insertAtHead(head, 32);
+    insertAtIndex(head, 34, 2);
+    insertAtIndex(head, 35, 0);
 
-    for (int i = 0; i < 5; i++)
-    {
-        head = insertAtHead(head, i);
-    }
-    for (int i = 5; i < 10; i++)
-    {
-        head = insertAtTail(head, i);
-    }
-    insertAtIndex(head, 6, 16);
-    deleteAtIndex(head, 5);
-    printList(head);
+    // head = recReverseLL(head);
+    iterativeReverseLL(head);
+    print(head);
 }
